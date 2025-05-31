@@ -18,7 +18,7 @@ import {
 
 import ParamLabel from './ParamsLabel'
 
-const endIconStyles = {
+export const endIconStyles = {
   px: 1,
   top: 2,
   right: 4,
@@ -165,7 +165,7 @@ const ParamsMultiSelect = ({
                       (Array.isArray(selected) && selected.length === 0)
                     ) {
                       return (
-                        <Typography variant="body2\" color="#CCC">
+                        <Typography variant="body2" color="#CCC">
                           null
                         </Typography>
                       )
@@ -254,5 +254,3 @@ const ParamsMultiSelect = ({
 }
 
 export default ParamsMultiSelect
-
-export { endIconStyles }
