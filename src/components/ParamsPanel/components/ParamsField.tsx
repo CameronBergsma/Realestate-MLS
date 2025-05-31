@@ -1,13 +1,15 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 
 import ClearIcon from '@mui/icons-material/Clear'
+import SearchIcon from '@mui/icons-material/Search'
 import {
   Box,
   IconButton,
   InputAdornment,
   TextField,
-  type TextFieldProps
+  type TextFieldProps,
+  Tooltip
 } from '@mui/material'
 
 import ParamLabel from './ParamsLabel'
@@ -21,6 +23,7 @@ type InputProps = TextFieldProps & {
   noClear?: boolean
   disabled?: boolean
   onChange?: () => void
+  searchable?: boolean
 }
 
 const ParamsField: React.FC<InputProps> = ({
@@ -32,9 +35,11 @@ const ParamsField: React.FC<InputProps> = ({
   type = 'text',
   noClear = false,
   onChange,
+  searchable = false,
   ...rest
 }) => {
   const inputRef = useRef<HTMLInputElement | null>(null)
+  const [isFocused, setIsFocused] = useState(false)
   const {
     trigger,
     register,
@@ -45,8 +50,13 @@ const ParamsField: React.FC<InputProps> = ({
   const value = getValues(name)
 
   const handleFocus = () => {
+    setIsFocused(true)
     trigger(name)
     onChange?.()
+  }
+
+  const handleBlur = () => {
+    setIsFocused(false)
   }
 
   // eslint-disable-next-line no-param-reassign
@@ -80,17 +90,23 @@ const ParamsField: React.FC<InputProps> = ({
         fullWidth
         type={type}
         size="small"
-        placeholder={'null'}
+        placeholder={searchable ? 'Search...' : 'null'}
         error={!!errors[name]}
         helperText={errors[name]?.message?.toString()}
         {...register(name)}
         {...rest}
-        onBlur={handleFocus}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
         onKeyDown={handleKeyDown}
-        slotProps={{
-          input: {
-            endAdornment: Boolean(!noClear && value) && (
-              <InputAdornment position="end" sx={{ pr: 0.75 }}>
+        InputProps={{
+          startAdornment: searchable && (
+            <InputAdornment position="start">
+              <SearchIcon sx={{ color: 'action.active', ml: 1 }} />
+            </InputAdornment>
+          ),
+          endAdornment: Boolean(!noClear && value) && (
+            <InputAdornment position="end" sx={{ pr: 0.75 }}>
+              <Tooltip title="Clear">
                 <IconButton
                   tabIndex={-1}
                   onClick={handleClearClick}
@@ -100,8 +116,16 @@ const ParamsField: React.FC<InputProps> = ({
                 >
                   <ClearIcon sx={{ fontSize: 18, color: 'rgb(56, 66, 72)' }} />
                 </IconButton>
-              </InputAdornment>
-            )
+              </Tooltip>
+            </InputAdornment>
+          )
+        }}
+        sx={{
+          '& .MuiInputBase-root': {
+            transition: 'all 0.2s ease-in-out',
+            ...(isFocused && {
+              boxShadow: '0 0 0 3px rgba(33, 150, 243, 0.1)'
+            })
           }
         }}
       />
