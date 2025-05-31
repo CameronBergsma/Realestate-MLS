@@ -138,3 +138,5 @@ const PropertyCard = ({
     </Stack>
   )
 }
+
+export default PropertyCard
