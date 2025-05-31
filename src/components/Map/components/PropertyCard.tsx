@@ -1,7 +1,8 @@
 import BathtubOutlinedIcon from '@mui/icons-material/BathtubOutlined'
 import BedOutlinedIcon from '@mui/icons-material/BedOutlined'
-// import ShowerOutlinedIcon from '@mui/icons-material/ShowerOutlined'
-import { Box, Stack } from '@mui/material'
+import HomeIcon from '@mui/icons-material/Home'
+import LocationOnIcon from '@mui/icons-material/LocationOn'
+import { Box, Stack, Typography } from '@mui/material'
 
 import { type Listing } from 'services/API/types'
 import { formatEnglishPrice } from 'utils/formatters'
@@ -21,7 +22,7 @@ const PropertyCard = ({
     address,
     class: propertyClass,
     listPrice = defaultPrice,
-    details: { numBathrooms = '?', numBedrooms = '?' } = {}
+    details: { numBathrooms = '?', numBedrooms = '?', propertyType = '?', sqft = '?' } = {}
   } = listing
 
   const commercial = propertyClass === 'CommercialProperty'
@@ -58,7 +59,7 @@ const PropertyCard = ({
         p: 1,
         mr: 2,
         '&:last-child': { mr: 0 },
-        width: 220,
+        width: 280,
         boxShadow: 1,
         borderRadius: 1,
         cursor: 'pointer',
@@ -70,11 +71,11 @@ const PropertyCard = ({
     >
       <Box
         sx={{
-          height: 66,
-          width: 100,
-          minWidth: 100,
+          height: 120,
+          width: 160,
+          minWidth: 160,
           borderRadius: 0.75,
-          bgcolor: '#384248', // marker color
+          bgcolor: '#384248',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundImage: `url(${getCDNPath(listing.images?.[0], 'small')})`
@@ -84,40 +85,56 @@ const PropertyCard = ({
         sx={{
           fontSize: '10pt',
           lineHeight: 1.25,
-          overflow: 'hidden'
+          overflow: 'hidden',
+          flex: 1
         }}
         justifyContent="space-between"
       >
-        <Box
-          sx={{
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap'
-          }}
-        >
-          {addressString}
-        </Box>
-        <Box sx={{ fontWeight: 700 }}>
-          {listPrice !== defaultPrice
-            ? formatEnglishPrice(listPrice)
-            : defaultPrice}
-        </Box>
+        <Stack spacing={1}>
+          <Typography variant="h6" fontSize={16} fontWeight="bold">
+            {listPrice !== defaultPrice
+              ? formatEnglishPrice(listPrice)
+              : defaultPrice}
+          </Typography>
+          
+          <Stack direction="row" spacing={0.5} alignItems="center">
+            <LocationOnIcon sx={{ fontSize: 14, color: 'text.secondary' }} />
+            <Typography
+              variant="body2"
+              sx={{
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap'
+              }}
+            >
+              {addressString}
+            </Typography>
+          </Stack>
 
-        <Box sx={{ color: 'text.secondary' }}>
           {commercial ? (
-            <>&nbsp;</>
-          ) : (
-            <Stack spacing={0.75} direction="row" alignItems="center">
-              <BedOutlinedIcon sx={{ fontSize: 16 }} />
-              {numBedrooms}
-              <BathtubOutlinedIcon sx={{ fontSize: 14 }} />
-              {numBathrooms}
+            <Stack direction="row" spacing={0.5} alignItems="center">
+              <HomeIcon sx={{ fontSize: 14, color: 'text.secondary' }} />
+              <Typography variant="body2">{propertyType}</Typography>
             </Stack>
+          ) : (
+            <>
+              <Stack direction="row" spacing={2}>
+                <Stack direction="row" spacing={0.5} alignItems="center">
+                  <BedOutlinedIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
+                  <Typography variant="body2">{numBedrooms}</Typography>
+                </Stack>
+                <Stack direction="row" spacing={0.5} alignItems="center">
+                  <BathtubOutlinedIcon sx={{ fontSize: 14, color: 'text.secondary' }} />
+                  <Typography variant="body2">{numBathrooms}</Typography>
+                </Stack>
+              </Stack>
+              <Typography variant="body2" color="text.secondary">
+                {sqft} sqft
+              </Typography>
+            </>
           )}
-        </Box>
+        </Stack>
       </Stack>
     </Stack>
   )
 }
-
-export default PropertyCard
