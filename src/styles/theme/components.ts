@@ -365,18 +365,11 @@ const components = {
           borderRadius: 1,
           bgcolor: 'background.default'
         })
-
-      // input: ({ theme }: ThemeProps) =>
-      //   theme.unstable_sx({
-      //     p: 2,
-      //     height: 16,
-      //     lineHeight: toRem(16)
-      //   })
     }
   },
   MuiSkeleton: {
     defaultProps: {
-      animation: 'wave' as const // weird type fixes because MUI misses type declarations
+      animation: 'wave' as const
     },
     styleOverrides: {
       rounded: ({ theme }: ThemeProps) =>
@@ -398,7 +391,6 @@ const components = {
     styleOverrides: {
       root: ({ theme }: ThemeProps) =>
         theme.unstable_sx({
-          // borderStyle: 'dotted',
           borderColor: 'divider',
           my: 0.5
         })
@@ -418,7 +410,7 @@ const components = {
     styleOverrides: {
       root: ({ theme }: ThemeProps) =>
         theme.unstable_sx({
-          '& .MuiButtonBase-root:first-child': {
+          '& .MuiButtonBase-root:first-of-type': {
             ml: 0
           }
         })
@@ -479,10 +471,6 @@ const components = {
             }
           },
           '&.MuiInputBase-colorSecondary': {
-            '& .MuiInputBase-input': {
-              // color: 'secondary.main'
-            },
-
             '& .MuiFormLabel-root': {
               color: 'secondary.light'
             },
@@ -556,10 +544,9 @@ const components = {
   MuiDialog: {
     defaultProps: {
       disableScrollLock: true,
-      // keepMounted: true,
       elevation: 3,
       TransitionComponent: undefined,
-      scroll: 'paper' as const // weird type fixes because MUI misses type declarations
+      scroll: 'paper' as const
     }
   },
   MuiDialogTitle: {
