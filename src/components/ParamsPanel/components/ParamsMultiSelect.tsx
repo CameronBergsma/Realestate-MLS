@@ -84,14 +84,14 @@ const ParamsMultiSelect = ({
       option && option.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
-  const MenuItemRow = ({ index, style }: { index: number; style: any }) => {
+  const MenuItemRow = ({ index, style, data }: { index: number; style: any; data: { localValue: string[] } }) => {
     const option = filteredOptions[index]
     return (
       <MenuItem key={option} value={option} style={style}>
         <Checkbox
           size="small"
           sx={checkboxStyles}
-          checked={localValue.includes(option)}
+          checked={data.localValue.includes(option)}
         />
         {option}
       </MenuItem>
@@ -165,7 +165,7 @@ const ParamsMultiSelect = ({
                       (Array.isArray(selected) && selected.length === 0)
                     ) {
                       return (
-                        <Typography variant="body2\" color="#CCC">
+                        <Typography variant="body2" color="#CCC">
                           null
                         </Typography>
                       )
@@ -223,6 +223,7 @@ const ParamsMultiSelect = ({
                   itemCount={filteredOptions.length}
                   itemSize={ITEM_HEIGHT}
                   overscanCount={5}
+                  itemData={{ localValue }}
                 >
                   {MenuItemRow}
                 </FixedSizeList>
